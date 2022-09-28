@@ -9,41 +9,36 @@
 <script type="text/javascript">
 /* Grabs user IP address...
 (Refer to https://ipleak.net/json for all available keys and values)
-  This function grabs JSON data with fetch. */
-   async function fetchipv4info(id) {
-       try {
-            const response = await fetch("https://ipv4.ipleak.net/json", {
-                method: 'GET',
+  These functions grabs JSON data with fetch and adds the result to the text in HTML */
+
+    function fetchipv4info(id) {
+        fetch("https://ipv4.ipleak.net/json")
+            .then(response => response.json(id))
+            .then(data => {
+                const ipv4info = data[id]
+                document.getElementById("ipv4address").innerHTML = ("IPV4 -> " + data[id]);
+            }) 
+            .catch(err => {
+                console.error(err);
             });
-            const ipv4info = await response.json();
-            return ipv4info[id];
-        } catch (error) {
-            console.error(error);
-        }
     }
 
-    async function fetchipv6info(id) {
-       try {
-            const response = await fetch("https://ipv6.ipleak.net/json", {
-                method: 'GET',
+    function fetchipv6info(id) {
+        fetch("https://ipv6.ipleak.net/json")
+            .then(response => response.json(id))
+            .then(data => {
+                const ipv6info = data[id]
+                document.getElementById("ipv6address").innerHTML = ("IPV6 -> " + data[id]);
+            }) 
+            .catch(err => {
+                console.error(err);
             });
-            const ipv6info = await response.json();
-            return ipv6info[id];
-        } catch (error) {
-            console.error(error);
-        }
     }
-	/* This function takes the JSON data and outputs it as a varable. */
-    async function getipaddress() {
-        const ipv4info = await fetchipv4info('ip');
-        const ipv6info = await fetchipv6info('ip');
-        document.getElementById("ipv4address").innerHTML = ("IPV4 -> " + ipv4info);
-        document.getElementById("ipv6address").innerHTML = ("IPV6 -> " + ipv6info);
-		}
+
 /* And this, makes everything run automatically on load */
 window.addEventListener ? 
-window.addEventListener("onload",getipaddress(),false) : 
-window.attachEvent && window.attachEvent("onload",getipaddress());
+window.addEventListener("onload",fetchipv4info('ip'),fetchipv6info('ip'),false) : 
+window.attachEvent && window.attachEvent("onload");
 </script>
 
 <p>
